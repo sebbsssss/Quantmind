@@ -4,11 +4,10 @@ import CryptoTicker from '@/components/CryptoTicker';
 import { aiModels } from '@/lib/mockData';
 import { Button } from '@/components/ui/button';
 
-type Tab = 'OVERALL_STATS' | 'ADVANCED_ANALYTICS';
+type Tab = 'RANKINGS' | 'ANALYTICS';
 
 export default function Leaderboard() {
-  const [activeTab, setActiveTab] = useState<Tab>('OVERALL_STATS');
-
+  const [activeTab, setActiveTab] = useState<Tab>('RANKINGS');
   const winningModel = aiModels[0];
 
   return (
@@ -16,139 +15,157 @@ export default function Leaderboard() {
       <Header />
       <CryptoTicker />
 
-      <main className="flex-1 container mx-auto px-4 py-6">
-        <h1 className="text-4xl font-bold mb-6">LEADERBOARD</h1>
+      <main className="flex-1 container mx-auto px-6 py-12 max-w-7xl">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-2 tracking-tight">Leaderboard</h1>
+          <p className="text-muted-foreground">Performance rankings and detailed analytics</p>
+        </div>
 
         <div className="flex gap-2 mb-6">
           <Button
-            variant={activeTab === 'OVERALL_STATS' ? 'default' : 'ghost'}
-            onClick={() => setActiveTab('OVERALL_STATS')}
-            className={activeTab === 'OVERALL_STATS' ? 'bg-neon-orange text-black' : ''}
+            variant={activeTab === 'RANKINGS' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('RANKINGS')}
           >
-            OVERALL STATS
+            Rankings
           </Button>
           <Button
-            variant={activeTab === 'ADVANCED_ANALYTICS' ? 'default' : 'ghost'}
-            onClick={() => setActiveTab('ADVANCED_ANALYTICS')}
-            className={activeTab === 'ADVANCED_ANALYTICS' ? 'bg-neon-green text-black' : ''}
+            variant={activeTab === 'ANALYTICS' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('ANALYTICS')}
           >
-            ADVANCED ANALYTICS
+            Analytics
           </Button>
         </div>
 
-        {activeTab === 'OVERALL_STATS' && (
+        {activeTab === 'RANKINGS' && (
           <div className="space-y-6">
-            <div className="overflow-x-auto border border-border rounded-lg bg-card/30">
-              <table className="w-full text-sm">
-                <thead className="border-b border-border">
-                  <tr>
-                    <th className="text-left p-4 font-semibold">RANK</th>
-                    <th className="text-left p-4 font-semibold">MODEL</th>
-                    <th className="text-left p-4 font-semibold">ACCT VALUE ↓</th>
-                    <th className="text-left p-4 font-semibold">RETURN %</th>
-                    <th className="text-left p-4 font-semibold">TOTAL P&L</th>
-                    <th className="text-left p-4 font-semibold">FEES</th>
-                    <th className="text-left p-4 font-semibold">WIN RATE</th>
-                    <th className="text-left p-4 font-semibold">BIGGEST WIN</th>
-                    <th className="text-left p-4 font-semibold">BIGGEST LOSS</th>
-                    <th className="text-left p-4 font-semibold">SHARPE</th>
-                    <th className="text-left p-4 font-semibold">TRADES</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {aiModels.map((model) => (
-                    <tr key={model.id} className="border-b border-border hover:bg-card/50 transition-colors">
-                      <td className="p-4">{model.rank}</td>
-                      <td className="p-4">
-                        <span className="font-semibold" style={{ color: model.color }}>
-                          {model.name}
-                        </span>
-                      </td>
-                      <td className="p-4 font-semibold">${model.accountValue.toLocaleString()}</td>
-                      <td className={`p-4 font-semibold ${model.returnPercent >= 0 ? 'text-neon-green' : 'text-destructive'}`}>
-                        {model.returnPercent >= 0 ? '+' : ''}
-                        {model.returnPercent.toFixed(2)}%
-                      </td>
-                      <td className={`p-4 ${model.totalPnL >= 0 ? 'text-neon-green' : 'text-destructive'}`}>
-                        ${model.totalPnL.toLocaleString()}
-                      </td>
-                      <td className="p-4">${model.fees.toFixed(2)}</td>
-                      <td className="p-4">{model.winRate.toFixed(1)}%</td>
-                      <td className="p-4 text-neon-green">${model.biggestWin.toLocaleString()}</td>
-                      <td className="p-4 text-destructive">${model.biggestLoss.toFixed(2)}</td>
-                      <td className={`p-4 ${model.sharpe >= 0 ? 'text-neon-green' : 'text-destructive'}`}>
-                        {model.sharpe.toFixed(3)}
-                      </td>
-                      <td className="p-4">{model.trades}</td>
+            <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-accent/50 border-b border-border">
+                    <tr>
+                      <th className="text-left p-4 font-semibold text-muted-foreground">Rank</th>
+                      <th className="text-left p-4 font-semibold text-muted-foreground">Model</th>
+                      <th className="text-left p-4 font-semibold text-muted-foreground">Account Value</th>
+                      <th className="text-left p-4 font-semibold text-muted-foreground">Return</th>
+                      <th className="text-left p-4 font-semibold text-muted-foreground">Total P&L</th>
+                      <th className="text-left p-4 font-semibold text-muted-foreground">Fees</th>
+                      <th className="text-left p-4 font-semibold text-muted-foreground">Win Rate</th>
+                      <th className="text-left p-4 font-semibold text-muted-foreground">Best Win</th>
+                      <th className="text-left p-4 font-semibold text-muted-foreground">Worst Loss</th>
+                      <th className="text-left p-4 font-semibold text-muted-foreground">Sharpe</th>
+                      <th className="text-left p-4 font-semibold text-muted-foreground">Trades</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="bg-white">
+                    {aiModels.map((model) => (
+                      <tr key={model.id} className="border-b border-border hover:bg-accent/30 transition-colors">
+                        <td className="p-4">
+                          <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center font-semibold">
+                            {model.rank}
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: model.color }} />
+                            <span className="font-medium">{model.name}</span>
+                          </div>
+                        </td>
+                        <td className="p-4 font-semibold">${model.accountValue.toLocaleString()}</td>
+                        <td className={`p-4 font-semibold ${model.returnPercent >= 0 ? 'text-accent-green' : 'text-accent-red'}`}>
+                          {model.returnPercent >= 0 ? '+' : ''}
+                          {model.returnPercent.toFixed(2)}%
+                        </td>
+                        <td className={`p-4 ${model.totalPnL >= 0 ? 'text-accent-green' : 'text-accent-red'}`}>
+                          ${model.totalPnL.toLocaleString()}
+                        </td>
+                        <td className="p-4 text-muted-foreground">${model.fees.toFixed(2)}</td>
+                        <td className="p-4">{model.winRate.toFixed(1)}%</td>
+                        <td className="p-4 text-accent-green">${model.biggestWin.toLocaleString()}</td>
+                        <td className="p-4 text-accent-red">${model.biggestLoss.toFixed(2)}</td>
+                        <td className={`p-4 ${model.sharpe >= 0 ? 'text-accent-green' : 'text-accent-red'}`}>
+                          {model.sharpe.toFixed(3)}
+                        </td>
+                        <td className="p-4">{model.trades}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="border border-border rounded-lg p-6 bg-card/30">
-                <h2 className="text-xl font-bold mb-4">WINNING MODEL</h2>
+              <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+                <h2 className="text-xl font-semibold mb-4">Leading Agent</h2>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 rounded-full" style={{ backgroundColor: winningModel.color }} />
-                  <span className="text-2xl font-bold" style={{ color: winningModel.color }}>
-                    {winningModel.name}
-                  </span>
+                  <div className="w-12 h-12 rounded-full" style={{ backgroundColor: winningModel.color }} />
+                  <div>
+                    <div className="text-2xl font-bold">{winningModel.name}</div>
+                    <div className="text-sm text-muted-foreground">Rank #{winningModel.rank}</div>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">TOTAL EQUITY</span>
-                    <span className="text-2xl font-bold text-neon-green">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center p-3 bg-accent-green-light rounded-lg">
+                    <span className="text-sm text-muted-foreground">Total Equity</span>
+                    <span className="text-xl font-bold text-accent-green">
                       ${winningModel.accountValue.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-accent/50 rounded-lg">
+                    <span className="text-sm text-muted-foreground">Return</span>
+                    <span className="text-lg font-semibold text-accent-green">
+                      +{winningModel.returnPercent.toFixed(2)}%
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="border border-border rounded-lg p-6 bg-card/30">
-                <h2 className="text-xl font-bold mb-4">ACTIVE POSITIONS</h2>
-                <p className="text-muted-foreground text-sm">
-                  Note: All statistics (except Account Value and P&L) reflect completed trades only. Active positions
-                  are not included in calculations until they are closed.
-                </p>
+              <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+                <h2 className="text-xl font-semibold mb-4">Key Metrics</h2>
+                <div className="space-y-4">
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Average Win Rate</div>
+                    <div className="text-2xl font-bold">
+                      {(aiModels.reduce((sum, m) => sum + m.winRate, 0) / aiModels.length).toFixed(1)}%
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Total Trades Executed</div>
+                    <div className="text-2xl font-bold">
+                      {aiModels.reduce((sum, m) => sum + m.trades, 0)}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Combined Portfolio Value</div>
+                    <div className="text-2xl font-bold">
+                      ${aiModels.reduce((sum, m) => sum + m.accountValue, 0).toLocaleString()}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="border border-border rounded-lg p-6 bg-card/30">
-              <h2 className="text-xl font-bold mb-4">Performance Comparison</h2>
-              <div className="grid grid-cols-6 gap-4">
-                {aiModels.map((model) => (
-                  <div key={model.id} className="text-center">
-                    <div className="text-xs text-muted-foreground mb-2">{model.name.toUpperCase()}</div>
-                    <div
-                      className="h-32 rounded flex items-end justify-center p-2"
-                      style={{
-                        backgroundColor: model.color,
-                        height: `${Math.max(20, (model.accountValue / 15000) * 100)}px`,
-                      }}
-                    >
-                      <span className="text-xs font-bold text-black">
-                        ${(model.accountValue / 1000).toFixed(1)}k
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className="bg-accent-blue-light border border-accent-blue/20 rounded-xl p-6">
+              <p className="text-sm text-foreground/80">
+                <strong>Note:</strong> All statistics reflect completed trades only. Active positions are not included
+                in calculations until they are closed. Rankings are updated in real-time based on account value.
+              </p>
             </div>
           </div>
         )}
 
-        {activeTab === 'ADVANCED_ANALYTICS' && (
-          <div className="border border-border rounded-lg p-6 bg-card/30">
-            <h2 className="text-2xl font-bold mb-4">Advanced Analytics</h2>
-            <p className="text-muted-foreground">Coming soon: Advanced metrics and analytics...</p>
+        {activeTab === 'ANALYTICS' && (
+          <div className="bg-card border border-border rounded-xl p-8 shadow-sm">
+            <h2 className="text-2xl font-semibold mb-4">Advanced Analytics</h2>
+            <p className="text-muted-foreground">
+              Detailed performance metrics, correlation analysis, and risk-adjusted return calculations coming soon...
+            </p>
           </div>
         )}
       </main>
 
-      <footer className="border-t border-border py-4 text-center text-sm text-muted-foreground">
-        <div className="container mx-auto px-4">
-          <p>Alpha Arena - Measuring AI's investing abilities in real markets</p>
+      <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground bg-white">
+        <div className="container mx-auto px-6">
+          <p>Alpha Arena · Measuring artificial intelligence in financial markets</p>
         </div>
       </footer>
     </div>

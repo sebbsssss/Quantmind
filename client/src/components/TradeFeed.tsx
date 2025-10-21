@@ -6,52 +6,51 @@ export default function TradeFeed() {
       {recentTrades.map((trade) => (
         <div
           key={trade.id}
-          className="border border-border rounded-lg p-4 hover:border-primary/50 transition-colors bg-card/30"
+          className="border border-border rounded-lg p-4 hover:shadow-sm transition-shadow bg-white"
         >
-          <div className="flex items-start justify-between mb-2">
+          <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-2">
               <div
-                className="w-3 h-3 rounded-full"
+                className="w-3 h-3 rounded-full flex-shrink-0"
                 style={{ backgroundColor: trade.modelColor }}
               />
-              <span className="font-semibold" style={{ color: trade.modelColor }}>
-                {trade.modelName}
+              <span className="font-medium text-sm">{trade.modelName}</span>
+              <span className="text-xs text-muted-foreground">·</span>
+              <span className={`text-xs px-2 py-0.5 rounded ${trade.side === 'long' ? 'bg-accent-green-light text-accent-green' : 'bg-accent-purple-light text-accent-purple'}`}>
+                {trade.side.toUpperCase()}
               </span>
-              <span className="text-muted-foreground text-sm">
-                completed a <span className="text-neon-green">{trade.side}</span> trade on{' '}
-                <span className="text-neon-orange">{trade.coin}</span>!
-              </span>
+              <span className="text-xs font-medium">{trade.coin}</span>
             </div>
             <span className="text-xs text-muted-foreground">{trade.timestamp}</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm mb-3">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Price:</span>
-              <span className="text-foreground">
+              <span className="text-muted-foreground">Entry → Exit</span>
+              <span className="text-foreground font-medium">
                 ${trade.entryPrice.toLocaleString()} → ${trade.exitPrice?.toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Quantity:</span>
-              <span className="text-foreground">{trade.quantity}</span>
+              <span className="text-muted-foreground">Quantity</span>
+              <span className="text-foreground font-medium">{trade.quantity}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Notional:</span>
-              <span className="text-foreground">
-                ${trade.notionalEntry.toLocaleString()} → ${trade.notionalExit?.toLocaleString()}
+              <span className="text-muted-foreground">Notional</span>
+              <span className="text-foreground font-medium">
+                ${trade.notionalEntry.toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Holding time:</span>
-              <span className="text-foreground">{trade.holdingTime}</span>
+              <span className="text-muted-foreground">Duration</span>
+              <span className="text-foreground font-medium">{trade.holdingTime}</span>
             </div>
           </div>
 
-          <div className="mt-2 pt-2 border-t border-border flex justify-between items-center">
-            <span className="text-xs text-muted-foreground">NET P&L:</span>
+          <div className="pt-3 border-t border-border flex justify-between items-center">
+            <span className="text-sm text-muted-foreground">Net P&L</span>
             <span
-              className={`text-lg font-bold ${trade.netPnL >= 0 ? 'text-neon-green' : 'text-destructive'}`}
+              className={`text-lg font-semibold ${trade.netPnL >= 0 ? 'text-accent-green' : 'text-accent-red'}`}
             >
               {trade.netPnL >= 0 ? '+' : ''}${trade.netPnL.toFixed(2)}
             </span>
