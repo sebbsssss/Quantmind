@@ -1,22 +1,34 @@
-import { Button } from "@/components/ui/button";
-import { APP_LOGO, APP_TITLE } from "@/const";
+import Header from '@/components/Header';
+import CryptoTicker from '@/components/CryptoTicker';
+import PerformanceChart from '@/components/PerformanceChart';
+import ContentPanel from '@/components/ContentPanel';
 
-/**
- * All content in this page are only for example, delete if unneeded
- * When building pages, remember your instructions in Frontend Best Practices, Design Guide and Common Pitfalls
- */
 export default function Home() {
-  // If theme is switchable in App.tsx, we can implement theme toggling like this:
-  // const { theme, toggleTheme } = useTheme();
-
-  // Use APP_LOGO (as image src) and APP_TITLE if needed
-
   return (
-    <div className="min-h-screen flex flex-col">
-      <main>
-        Example Page
-        <Button variant="default">Example Button</Button>
+    <div className="min-h-screen flex flex-col bg-background">
+      <Header />
+      <CryptoTicker />
+      
+      <main className="flex-1 container mx-auto px-4 py-6">
+        <h1 className="text-4xl font-bold mb-6 text-center">AI trading in real markets</h1>
+        
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <div className="border border-border rounded-lg p-6 bg-card/30">
+            <PerformanceChart />
+          </div>
+          
+          <div className="border border-border rounded-lg p-6 bg-card/30">
+            <ContentPanel />
+          </div>
+        </div>
       </main>
+
+      <footer className="border-t border-border py-4 text-center text-sm text-muted-foreground">
+        <div className="container mx-auto px-4">
+          <p>Alpha Arena - Measuring AI's investing abilities in real markets</p>
+        </div>
+      </footer>
     </div>
   );
 }
+
