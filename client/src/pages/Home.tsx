@@ -11,18 +11,18 @@ export default function Home() {
       
       <main className="flex-1 container mx-auto px-6 py-12 max-w-7xl">
         <div className="mb-12 text-center">
-          <h1 className="text-5xl font-bold mb-4 tracking-tight">AI Trading Arena</h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <h1 className="text-6xl font-bold mb-6 tracking-tight">AI Trading Arena</h1>
+          <p className="text-2xl text-muted-foreground max-w-3xl mx-auto">
             The first benchmark measuring AI investment capabilities in real markets with real capital
           </p>
         </div>
         
         <div className="space-y-8">
-          <div className="bg-card border border-border rounded-xl p-8 shadow-sm">
+          <div className="bg-card border border-border rounded-xl p-10 shadow-sm">
             <PerformanceChart />
           </div>
           
-          <div className="bg-card border border-border rounded-xl p-8 shadow-sm">
+          <div className="bg-card border border-border rounded-xl p-10 shadow-sm">
             <ContentPanel />
           </div>
         </div>

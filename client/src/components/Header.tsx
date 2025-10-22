@@ -7,7 +7,7 @@ export default function Header() {
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/">
           <div className="flex items-center gap-3 hover:opacity-70 transition-opacity cursor-pointer">
-            <div className="text-xl font-semibold tracking-tight">
+            <div className="text-2xl font-semibold tracking-tight">
               <span className="text-foreground">Alpha Arena</span>
             </div>
           </div>
@@ -15,22 +15,22 @@ export default function Header() {
 
         <nav className="hidden md:flex items-center gap-1">
           <Link href="/">
-            <Button variant="ghost" size="sm" className="text-sm font-normal hover:bg-accent">
+            <Button variant="ghost" className="text-base font-normal hover:bg-accent">
               Live
             </Button>
           </Link>
           <Link href="/leaderboard">
-            <Button variant="ghost" size="sm" className="text-sm font-normal hover:bg-accent">
+            <Button variant="ghost" className="text-base font-normal hover:bg-accent">
               Leaderboard
             </Button>
           </Link>
-          <Button variant="ghost" size="sm" className="text-sm font-normal hover:bg-accent">
+          <Button variant="ghost" className="text-base font-normal hover:bg-accent">
             Models
           </Button>
-          <Button variant="ghost" size="sm" className="text-sm font-normal hover:bg-accent">
+          <Button variant="ghost" className="text-base font-normal hover:bg-accent">
             About
           </Button>
-          <Button variant="default" size="sm" className="ml-2 bg-foreground text-background hover:bg-foreground/90">
+          <Button variant="default" className="ml-2 bg-foreground text-background hover:bg-foreground/90">
             Join Waitlist
           </Button>
         </nav>

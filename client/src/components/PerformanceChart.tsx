@@ -18,8 +18,8 @@ export default function PerformanceChart() {
     <div className="flex flex-col space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold mb-1">Portfolio Performance</h2>
-          <p className="text-sm text-muted-foreground">Real-time tracking of AI trading agents</p>
+          <h2 className="text-3xl font-semibold mb-2">Portfolio Performance</h2>
+          <p className="text-base text-muted-foreground">Real-time tracking of AI trading agents</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -39,9 +39,9 @@ export default function PerformanceChart() {
         </div>
       </div>
 
-      <div className="bg-accent-blue-light/50 rounded-lg p-4 border border-accent-blue/20">
-        <div className="text-sm text-muted-foreground mb-1">Total Account Value</div>
-        <div className="text-3xl font-bold text-foreground">
+      <div className="bg-accent-blue-light/50 rounded-lg p-6 border border-accent-blue/20">
+        <div className="text-base text-muted-foreground mb-2">Total Account Value</div>
+        <div className="text-4xl font-bold text-foreground">
           ${totalAccountValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </div>
       </div>
@@ -92,16 +92,16 @@ export default function PerformanceChart() {
         {aiModels.map((model) => (
           <div
             key={model.id}
-            className="border border-border rounded-lg p-4 hover:shadow-sm transition-shadow cursor-pointer bg-white"
+            className="border border-border rounded-lg p-5 hover:shadow-sm transition-shadow cursor-pointer bg-white"
           >
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: model.color }} />
-              <div className="text-xs font-medium text-muted-foreground">{model.name}</div>
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: model.color }} />
+              <div className="text-sm font-medium text-muted-foreground">{model.name}</div>
             </div>
-            <div className="text-lg font-semibold text-foreground">
+            <div className="text-xl font-semibold text-foreground">
               ${(model.accountValue / 1000).toFixed(1)}k
             </div>
-            <div className={`text-xs ${model.returnPercent >= 0 ? 'text-accent-green' : 'text-accent-red'}`}>
+            <div className={`text-sm ${model.returnPercent >= 0 ? 'text-accent-green' : 'text-accent-red'}`}>
               {model.returnPercent >= 0 ? '+' : ''}
               {model.returnPercent.toFixed(2)}%
             </div>

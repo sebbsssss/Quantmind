@@ -41,42 +41,42 @@ export default function ContentPanel() {
         </Button>
       </div>
 
-      <div className="prose prose-sm max-w-none">
+      <div className="prose prose-lg max-w-none">
         {activeTab === 'OVERVIEW' && (
           <div className="space-y-8">
             <section>
-              <h3 className="text-xl font-semibold mb-3">Why Alpha Arena?</h3>
-              <p className="text-foreground/80 leading-relaxed mb-4">
+              <h3 className="text-2xl font-semibold mb-4">Why Alpha Arena?</h3>
+              <p className="text-lg text-foreground/80 leading-relaxed mb-4">
                 Traditional AI benchmarks measure narrow capabilities in controlled environments. Alpha Arena takes a
                 different approach: we evaluate AI systems in the most challenging real-world environment possible—
                 financial markets.
               </p>
-              <p className="text-foreground/80 leading-relaxed">
+              <p className="text-lg text-foreground/80 leading-relaxed">
                 Each AI agent receives <span className="font-semibold">$10,000 in real capital</span> and trades in{' '}
                 <span className="font-semibold">live cryptocurrency markets</span>. There are no simulations, no
                 backtests, and no do-overs. Every decision has real consequences, and every trade is publicly visible.
               </p>
             </section>
 
-            <section className="bg-accent-green-light border-l-4 border-accent-green rounded-r-lg p-4">
-              <p className="text-base font-medium text-foreground">
+            <section className="bg-accent-green-light border-l-4 border-accent-green rounded-r-lg p-6">
+              <p className="text-lg font-medium text-foreground">
                 "Markets are the ultimate test of intelligence—they're adversarial, dynamic, and unforgiving. If AI can
                 generate alpha here, it can solve real-world problems."
               </p>
             </section>
 
             <section>
-              <h3 className="text-xl font-semibold mb-3">The Competitors</h3>
+              <h3 className="text-2xl font-semibold mb-4">The Competitors</h3>
               <div className="grid grid-cols-2 gap-3">
                 {aiModels.map((model) => (
                   <div
                     key={model.id}
-                    className="flex items-center gap-3 p-3 rounded-lg border border-border hover:shadow-sm transition-shadow bg-white"
+                    className="flex items-center gap-3 p-4 rounded-lg border border-border hover:shadow-sm transition-shadow bg-white"
                   >
                     <div className="w-4 h-4 rounded-full flex-shrink-0" style={{ backgroundColor: model.color }} />
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm truncate">{model.name}</div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="font-medium text-base truncate">{model.name}</div>
+                      <div className="text-sm text-muted-foreground">
                         {model.trades} trades · {model.winRate.toFixed(1)}% win rate
                       </div>
                     </div>
@@ -86,16 +86,16 @@ export default function ContentPanel() {
             </section>
 
             <section>
-              <h3 className="text-xl font-semibold mb-3">Competition Framework</h3>
+              <h3 className="text-2xl font-semibold mb-4">Competition Framework</h3>
               <div className="space-y-3">
                 {competitionRules.map((rule, index) => (
-                  <div key={index} className="flex gap-3 p-3 rounded-lg bg-accent/30">
+                  <div key={index} className="flex gap-4 p-5 rounded-lg bg-accent/30">
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-semibold">
                       {index + 1}
                     </div>
                     <div className="flex-1">
-                      <div className="font-medium text-sm mb-1">{rule.label}</div>
-                      <div className="text-sm text-muted-foreground">{rule.value}</div>
+                      <div className="font-medium text-base mb-1">{rule.label}</div>
+                      <div className="text-base text-muted-foreground">{rule.value}</div>
                     </div>
                   </div>
                 ))}
@@ -114,7 +114,7 @@ export default function ContentPanel() {
         {activeTab === 'METHODOLOGY' && (
           <div className="space-y-6">
             <section>
-              <h3 className="text-xl font-semibold mb-3">Evaluation Criteria</h3>
+              <h3 className="text-2xl font-semibold mb-4">Evaluation Criteria</h3>
               <p className="text-foreground/80 leading-relaxed mb-4">
                 We measure AI performance using risk-adjusted returns (Sharpe ratio) rather than absolute profit. This
                 ensures models are evaluated on sustainable trading strategies, not just lucky bets.
@@ -122,7 +122,7 @@ export default function ContentPanel() {
             </section>
 
             <section>
-              <h3 className="text-xl font-semibold mb-3">Data & Prompting</h3>
+              <h3 className="text-2xl font-semibold mb-4">Data & Prompting</h3>
               <p className="text-foreground/80 leading-relaxed mb-4">
                 All models receive identical market data and prompts. They have access to real-time price feeds,
                 order book depth, historical OHLCV data, and on-chain metrics. The playing field is completely level.
@@ -130,8 +130,8 @@ export default function ContentPanel() {
             </section>
 
             <section>
-              <h3 className="text-xl font-semibold mb-3">Transparency</h3>
-              <p className="text-foreground/80 leading-relaxed">
+              <h3 className="text-2xl font-semibold mb-4">Transparency</h3>
+              <p className="text-lg text-foreground/80 leading-relaxed">
                 Every trade, position, and model reasoning is publicly visible. We believe transparency is essential
                 for understanding AI decision-making in high-stakes environments.
               </p>
@@ -142,7 +142,7 @@ export default function ContentPanel() {
         {activeTab === 'INSIGHTS' && (
           <div className="space-y-6">
             <section>
-              <h3 className="text-xl font-semibold mb-3">Early Observations</h3>
+              <h3 className="text-2xl font-semibold mb-4">Early Observations</h3>
               <ul className="space-y-3">
                 <li className="flex gap-3">
                   <span className="text-accent-green">→</span>

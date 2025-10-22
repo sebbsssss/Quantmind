@@ -6,7 +6,7 @@ export default function TradeFeed() {
       {recentTrades.map((trade) => (
         <div
           key={trade.id}
-          className="border border-border rounded-lg p-4 hover:shadow-sm transition-shadow bg-white"
+          className="border border-border rounded-lg p-6 hover:shadow-sm transition-shadow bg-white"
         >
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -14,17 +14,17 @@ export default function TradeFeed() {
                 className="w-3 h-3 rounded-full flex-shrink-0"
                 style={{ backgroundColor: trade.modelColor }}
               />
-              <span className="font-medium text-sm">{trade.modelName}</span>
-              <span className="text-xs text-muted-foreground">·</span>
-              <span className={`text-xs px-2 py-0.5 rounded ${trade.side === 'long' ? 'bg-accent-green-light text-accent-green' : 'bg-accent-purple-light text-accent-purple'}`}>
+              <span className="font-medium text-base">{trade.modelName}</span>
+              <span className="text-sm text-muted-foreground">·</span>
+              <span className={`text-sm px-2 py-1 rounded ${trade.side === 'long' ? 'bg-accent-green-light text-accent-green' : 'bg-accent-purple-light text-accent-purple'}`}>
                 {trade.side.toUpperCase()}
               </span>
-              <span className="text-xs font-medium">{trade.coin}</span>
+              <span className="text-sm font-medium">{trade.coin}</span>
             </div>
-            <span className="text-xs text-muted-foreground">{trade.timestamp}</span>
+            <span className="text-sm text-muted-foreground">{trade.timestamp}</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm mb-3">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-base mb-4">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Entry → Exit</span>
               <span className="text-foreground font-medium">
@@ -47,10 +47,10 @@ export default function TradeFeed() {
             </div>
           </div>
 
-          <div className="pt-3 border-t border-border flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Net P&L</span>
+          <div className="pt-4 border-t border-border flex justify-between items-center">
+            <span className="text-base text-muted-foreground">Net P&L</span>
             <span
-              className={`text-lg font-semibold ${trade.netPnL >= 0 ? 'text-accent-green' : 'text-accent-red'}`}
+              className={`text-xl font-semibold ${trade.netPnL >= 0 ? 'text-accent-green' : 'text-accent-red'}`}
             >
               {trade.netPnL >= 0 ? '+' : ''}${trade.netPnL.toFixed(2)}
             </span>
