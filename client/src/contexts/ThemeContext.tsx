@@ -22,29 +22,39 @@ export function ThemeProvider({
   switchable = false,
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return defaultTheme;
+    
     if (switchable) {
-      const stored = localStorage.getItem("theme");
-      return (stored as Theme) || defaultTheme;
+      const stored = localStorage.getItem("theme") as Theme;
+      return stored || defaultTheme;
     }
     return defaultTheme;
   });
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-
+    const root = window.document.documentElement;
+    
+    // Remove both classes first
+    root.classList.remove("light", "dark");
+    
+    // Add the current theme class
+    root.classList.add(theme);
+    
+    // Save to localStorage if switchable
     if (switchable) {
       localStorage.setItem("theme", theme);
     }
+    
+    console.log('Theme updated to:', theme, 'Classes:', root.className);
   }, [theme, switchable]);
 
   const toggleTheme = switchable
     ? () => {
-        setTheme(prev => (prev === "light" ? "dark" : "light"));
+        setTheme(prev => {
+          const newTheme = prev === "light" ? "dark" : "light";
+          console.log('Toggling theme from', prev, 'to', newTheme);
+          return newTheme;
+        });
       }
     : undefined;
 
@@ -62,3 +72,4 @@ export function useTheme() {
   }
   return context;
 }
+
