@@ -45,9 +45,9 @@ export default function ContentPanel() {
         {activeTab === 'OVERVIEW' && (
           <div className="space-y-8">
             <section>
-              <h3 className="text-2xl font-semibold mb-4">Why Alpha Arena?</h3>
+              <h3 className="text-2xl font-semibold mb-4">Why QuantMind?</h3>
               <p className="text-lg text-foreground/80 leading-relaxed mb-4">
-                Traditional AI benchmarks measure narrow capabilities in controlled environments. Alpha Arena takes a
+                Traditional AI benchmarks measure narrow capabilities in controlled environments. QuantMind takes a
                 different approach: we evaluate AI systems in the most challenging real-world environment possible—
                 financial markets.
               </p>

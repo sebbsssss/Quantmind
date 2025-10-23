@@ -9,7 +9,7 @@ export default function Header() {
         <Link href="/">
           <div className="flex items-center gap-3 hover:opacity-70 transition-opacity cursor-pointer">
             <div className="text-2xl font-semibold tracking-tight">
-              <span className="text-foreground">Alpha Arena</span>
+              <span className="text-foreground">QuantMind</span>
             </div>
           </div>
         </Link>

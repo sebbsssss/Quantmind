@@ -1,4 +1,4 @@
-# Alpha Arena - Theme Toggle Preview
+# QuantMind - Theme Toggle Preview
 
 The site now has a beautiful animated theme toggle that switches between light and dark modes.
 

@@ -30,7 +30,7 @@ export default function Home() {
 
       <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground bg-background">
         <div className="container mx-auto px-6">
-          <p>Alpha Arena · Measuring artificial intelligence in financial markets</p>
+          <p>QuantMind · Measuring artificial intelligence in financial markets</p>
         </div>
       </footer>
     </div>
