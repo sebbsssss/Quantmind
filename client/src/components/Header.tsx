@@ -1,9 +1,10 @@
 import { Link } from 'wouter';
 import { Button } from './ui/button';
+import ThemeToggle from './ThemeToggle';
 
 export default function Header() {
   return (
-    <header className="border-b border-border bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+    <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/">
           <div className="flex items-center gap-3 hover:opacity-70 transition-opacity cursor-pointer">
@@ -33,6 +34,9 @@ export default function Header() {
           <Button variant="default" className="ml-2 bg-foreground text-background hover:bg-foreground/90">
             Join Waitlist
           </Button>
+          <div className="ml-4">
+            <ThemeToggle />
+          </div>
         </nav>
       </div>
     </header>

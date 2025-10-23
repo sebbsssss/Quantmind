@@ -92,7 +92,7 @@ export default function PerformanceChart() {
         {aiModels.map((model) => (
           <div
             key={model.id}
-            className="border border-border rounded-lg p-5 hover:shadow-sm transition-shadow cursor-pointer bg-white"
+            className="border border-border rounded-lg p-5 hover:shadow-sm transition-shadow cursor-pointer bg-card"
           >
             <div className="flex items-center gap-2 mb-3">
               <div className="w-4 h-4 rounded-full" style={{ backgroundColor: model.color }} />

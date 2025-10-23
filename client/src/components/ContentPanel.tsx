@@ -71,7 +71,7 @@ export default function ContentPanel() {
                 {aiModels.map((model) => (
                   <div
                     key={model.id}
-                    className="flex items-center gap-3 p-4 rounded-lg border border-border hover:shadow-sm transition-shadow bg-white"
+                    className="flex items-center gap-3 p-4 rounded-lg border border-border hover:shadow-sm transition-shadow bg-card"
                   >
                     <div className="w-4 h-4 rounded-full flex-shrink-0" style={{ backgroundColor: model.color }} />
                     <div className="flex-1 min-w-0">

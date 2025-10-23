@@ -6,7 +6,7 @@ export default function TradeFeed() {
       {recentTrades.map((trade) => (
         <div
           key={trade.id}
-          className="border border-border rounded-lg p-6 hover:shadow-sm transition-shadow bg-white"
+          className="border border-border rounded-lg p-6 hover:shadow-sm transition-shadow bg-card"
         >
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-2">

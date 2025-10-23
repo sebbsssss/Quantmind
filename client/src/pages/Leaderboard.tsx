@@ -56,7 +56,7 @@ export default function Leaderboard() {
                       <th className="text-left p-5 font-semibold text-muted-foreground">Trades</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white">
+                  <tbody className="bg-card">
                     {aiModels.map((model) => (
                       <tr key={model.id} className="border-b border-border hover:bg-accent/30 transition-colors">
                         <td className="p-5">
@@ -163,7 +163,7 @@ export default function Leaderboard() {
         )}
       </main>
 
-      <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground bg-white">
+      <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground bg-background">
         <div className="container mx-auto px-6">
           <p>Alpha Arena · Measuring artificial intelligence in financial markets</p>
         </div>
