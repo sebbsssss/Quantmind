@@ -2,6 +2,7 @@ import Header from '@/components/Header';
 import CryptoTicker from '@/components/CryptoTicker';
 import PerformanceChart from '@/components/PerformanceChart';
 import ContentPanel from '@/components/ContentPanel';
+import AIReasoning from '@/components/AIReasoning';
 
 export default function Home() {
   return (
@@ -20,6 +21,10 @@ export default function Home() {
         <div className="space-y-8">
           <div className="bg-card border border-border rounded-xl p-10 shadow-sm">
             <PerformanceChart />
+          </div>
+          
+          <div className="bg-card border border-border rounded-xl p-10 shadow-sm">
+            <AIReasoning />
           </div>
           
           <div className="bg-card border border-border rounded-xl p-10 shadow-sm">

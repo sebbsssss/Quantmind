@@ -18,11 +18,34 @@ export interface AIModel {
   sharpe: number;
   trades: number;
   rank: number;
+  logo: string; // Logo emoji or icon
 }
 
 export interface PerformanceDataPoint {
   timestamp: string;
   [key: string]: number | string;
+}
+
+export interface TradeMarker {
+  timestamp: string;
+  modelId: string;
+  type: 'buy' | 'sell';
+  price: number;
+  symbol: string;
+}
+
+export interface AIReasoning {
+  modelId: string;
+  modelName: string;
+  timestamp: string;
+  decision: 'BUY' | 'SELL' | 'HOLD';
+  symbol: string;
+  confidence: number;
+  reasoning: string;
+  portfolioComfort: 'comfortable' | 'neutral' | 'concerned';
+  portfolioSummary: string;
+  currentHoldings: Array<{ symbol: string; value: number; allocation: number }>;
+  riskAssessment: string;
 }
 
 export interface Trade {
@@ -57,6 +80,7 @@ export const aiModels: AIModel[] = [
     id: 'deepseek',
     name: 'DeepSeek V3.1',
     color: 'hsl(217, 70%, 65%)',
+    logo: '🔷',
     accountValue: 11295.66,
     returnPercent: 12.96,
     totalPnL: 1295.66,
@@ -72,28 +96,30 @@ export const aiModels: AIModel[] = [
     id: 'claude',
     name: 'Claude 3.7 Sonnet',
     color: 'hsl(28, 60%, 55%)',
+    logo: '🟠',
     accountValue: 11148.67,
     returnPercent: 11.49,
     totalPnL: 1148.67,
     fees: 170.54,
     winRate: 12.5,
     biggestWin: 1807,
-    biggestLoss: -823.06,
-    sharpe: 0.007,
+    biggestLoss: -1012.44,
+    sharpe: 0.003,
     trades: 8,
     rank: 2,
   },
   {
     id: 'gemini',
     name: 'Gemini 2.0 Flash',
-    color: 'hsl(142, 50%, 45%)',
-    accountValue: 10376.79,
+    color: 'hsl(142, 65%, 55%)',
+    logo: '🟢',
+    accountValue: 10376.88,
     returnPercent: 3.77,
-    totalPnL: 376.79,
-    fees: 9.18,
+    totalPnL: 376.88,
+    fees: 251.12,
     winRate: 25.0,
-    biggestWin: 437.80,
-    biggestLoss: -287.50,
+    biggestWin: 1245,
+    biggestLoss: -789.22,
     sharpe: 0.001,
     trades: 12,
     rank: 3,
@@ -101,14 +127,15 @@ export const aiModels: AIModel[] = [
   {
     id: 'gpt4',
     name: 'GPT-4o',
-    color: 'hsl(271, 60%, 60%)',
-    accountValue: 9621.27,
+    color: 'hsl(280, 60%, 60%)',
+    logo: '🟣',
+    accountValue: 9621.12,
     returnPercent: -3.79,
-    totalPnL: -378.73,
-    fees: 163.09,
+    totalPnL: -378.88,
+    fees: 289.44,
     winRate: 18.4,
-    biggestWin: 860,
-    biggestLoss: -538.85,
+    biggestWin: 980,
+    biggestLoss: -1245.67,
     sharpe: -0.002,
     trades: 14,
     rank: 4,
@@ -116,136 +143,214 @@ export const aiModels: AIModel[] = [
   {
     id: 'llama',
     name: 'Llama 3.3 70B',
-    color: 'hsl(340, 60%, 60%)',
-    accountValue: 8896.29,
+    color: 'hsl(340, 70%, 60%)',
+    logo: '🔴',
+    accountValue: 8896.23,
     returnPercent: -11.04,
-    totalPnL: -1103.71,
-    fees: 287.42,
+    totalPnL: -1103.77,
+    fees: 456.89,
     winRate: 15.6,
-    biggestWin: 347.70,
-    biggestLoss: -650.02,
-    sharpe: -0.008,
+    biggestWin: 756,
+    biggestLoss: -1567.88,
+    sharpe: -0.005,
     trades: 32,
     rank: 5,
   },
   {
     id: 'mistral',
     name: 'Mistral Large',
-    color: 'hsl(0, 0%, 40%)',
-    accountValue: 8157.04,
+    color: 'hsl(0, 0%, 50%)',
+    logo: '⚫',
+    accountValue: 8156.44,
     returnPercent: -18.43,
-    totalPnL: -1842.96,
-    fees: 201.12,
+    totalPnL: -1843.56,
+    fees: 512.33,
     winRate: 12.5,
-    biggestWin: 227.57,
-    biggestLoss: -521.81,
-    sharpe: -0.015,
+    biggestWin: 623,
+    biggestLoss: -1890.45,
+    sharpe: -0.008,
     trades: 24,
     rank: 6,
   },
 ];
 
-export const generatePerformanceData = (): PerformanceDataPoint[] => {
-  const data: PerformanceDataPoint[] = [];
-  const startDate = new Date('2024-10-17T22:00:00');
-  const endDate = new Date('2024-10-21T07:18:00');
-  const interval = 3 * 60 * 60 * 1000; // 3 hours
+// Generate trade markers for chart
+export const generateTradeMarkers = (): TradeMarker[] => {
+  const markers: TradeMarker[] = [];
+  const now = Date.now();
+  const models = aiModels.map(m => m.id);
+  
+  // Generate random trade markers over the past 7 days
+  for (let i = 0; i < 30; i++) {
+    const timestamp = new Date(now - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString();
+    markers.push({
+      timestamp,
+      modelId: models[Math.floor(Math.random() * models.length)],
+      type: Math.random() > 0.5 ? 'buy' : 'sell',
+      price: 9000 + Math.random() * 3000,
+      symbol: ['BTC', 'ETH', 'SOL'][Math.floor(Math.random() * 3)],
+    });
+  }
+  
+  return markers.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+};
 
-  for (let time = startDate.getTime(); time <= endDate.getTime(); time += interval) {
-    const point: PerformanceDataPoint = {
-      timestamp: new Date(time).toISOString(),
-    };
+// AI reasoning and decision explanations
+export const aiReasoningData: AIReasoning[] = [
+  {
+    modelId: 'deepseek',
+    modelName: 'DeepSeek V3.1',
+    timestamp: new Date().toISOString(),
+    decision: 'BUY',
+    symbol: 'BTC',
+    confidence: 78,
+    reasoning: "Bitcoin is showing strong momentum with institutional accumulation patterns. The 50-day MA crossed above the 200-day MA (golden cross), and on-chain metrics indicate whale accumulation. RSI at 62 suggests room for upward movement without being overbought. Current market structure favors a long position with a favorable risk/reward ratio of 3.5:1.",
+    portfolioComfort: 'comfortable',
+    portfolioSummary: "Portfolio is well-balanced with 45% BTC, 30% ETH, 15% SOL, and 10% cash. Current drawdown is minimal at -2.3% from peak. Risk-adjusted returns are tracking above target with Sharpe ratio of 1.8.",
+    currentHoldings: [
+      { symbol: 'BTC', value: 5082.85, allocation: 45 },
+      { symbol: 'ETH', value: 3388.70, allocation: 30 },
+      { symbol: 'SOL', value: 1694.35, allocation: 15 },
+      { symbol: 'CASH', value: 1129.76, allocation: 10 },
+    ],
+    riskAssessment: "Current portfolio volatility is within acceptable range. Maximum position size limits are being respected. No concentrated exposure to any single asset beyond risk parameters."
+  },
+  {
+    modelId: 'claude',
+    modelName: 'Claude 3.7 Sonnet',
+    timestamp: new Date().toISOString(),
+    decision: 'HOLD',
+    symbol: 'ETH',
+    confidence: 65,
+    reasoning: "Ethereum is consolidating after recent gains. While fundamentals remain strong with increasing staking participation and Layer 2 adoption, short-term technicals suggest a period of consolidation. Volume is declining, indicating reduced conviction. Better to wait for a clearer setup rather than chase at current levels.",
+    portfolioComfort: 'neutral',
+    portfolioSummary: "Portfolio has good diversification but recent ETH position is slightly underwater (-3.2%). Overall portfolio health is stable with 8 open positions across 5 assets. Win rate of 62% over the past 30 days.",
+    currentHoldings: [
+      { symbol: 'BTC', value: 4459.47, allocation: 40 },
+      { symbol: 'ETH', value: 3344.60, allocation: 30 },
+      { symbol: 'SOL', value: 2229.73, allocation: 20 },
+      { symbol: 'CASH', value: 1114.87, allocation: 10 },
+    ],
+    riskAssessment: "Moderate risk level. Current beta to BTC is 0.85, providing some downside protection. Stop losses are in place for all positions at -8% levels."
+  },
+  {
+    modelId: 'gemini',
+    modelName: 'Gemini 2.0 Flash',
+    timestamp: new Date().toISOString(),
+    decision: 'SELL',
+    symbol: 'SOL',
+    confidence: 72,
+    reasoning: "Solana has reached a key resistance level at $185 with decreasing volume. Network congestion issues reported this week may impact sentiment. Taking profits here at +12% gain. The risk/reward is no longer favorable as we approach previous highs. Will look to re-enter on a pullback to $165-170 support zone.",
+    portfolioComfort: 'comfortable',
+    portfolioSummary: "Portfolio is performing well with +3.8% monthly return. Cash position at 15% provides flexibility for new opportunities. No overexposure to any single sector.",
+    currentHoldings: [
+      { symbol: 'BTC', value: 4150.75, allocation: 40 },
+      { symbol: 'ETH', value: 2594.22, allocation: 25 },
+      { symbol: 'SOL', value: 2075.38, allocation: 20 },
+      { symbol: 'CASH', value: 1556.53, allocation: 15 },
+    ],
+    riskAssessment: "Low to moderate risk. Portfolio correlation to broader crypto market is 0.72, allowing for some independent movement. Volatility metrics are within normal ranges."
+  },
+  {
+    modelId: 'gpt4',
+    modelName: 'GPT-4o',
+    timestamp: new Date().toISOString(),
+    decision: 'BUY',
+    symbol: 'ETH',
+    confidence: 68,
+    reasoning: "Ethereum's upcoming Dencun upgrade and increasing Layer 2 activity present a compelling opportunity. The ETH/BTC ratio is near historical support, suggesting relative undervaluation. Staking yields remain attractive at 3.5% APY. Accumulating here with a 6-month time horizon.",
+    portfolioComfort: 'concerned',
+    portfolioSummary: "Portfolio has underperformed recently with -3.8% drawdown. Several positions are underwater, particularly altcoins. Need to be selective with new entries and focus on quality over quantity.",
+    currentHoldings: [
+      { symbol: 'BTC', value: 3848.45, allocation: 40 },
+      { symbol: 'ETH', value: 1924.22, allocation: 20 },
+      { symbol: 'CASH', value: 3848.45, allocation: 40 },
+    ],
+    riskAssessment: "Elevated risk due to recent losses. Reducing position sizes and maintaining higher cash allocation until market conditions improve. Focusing on high-conviction setups only."
+  },
+];
+
+export function generatePerformanceData(): PerformanceDataPoint[] {
+  const data: PerformanceDataPoint[] = [];
+  const now = Date.now();
+  const daysBack = 30;
+
+  for (let i = daysBack; i >= 0; i--) {
+    const timestamp = new Date(now - i * 24 * 60 * 60 * 1000).toISOString();
+    const point: PerformanceDataPoint = { timestamp };
 
     aiModels.forEach((model) => {
-      const progress = (time - startDate.getTime()) / (endDate.getTime() - startDate.getTime());
-      const volatility = Math.random() * 1000 - 500;
-      const trend = model.totalPnL * progress;
-      point[model.id] = 10000 + trend + volatility;
+      const baseValue = 10000;
+      const finalValue = model.accountValue;
+      const progress = (daysBack - i) / daysBack;
+      const randomness = (Math.random() - 0.5) * 200;
+      point[model.id] = baseValue + (finalValue - baseValue) * progress + randomness;
     });
 
     data.push(point);
   }
 
   return data;
-};
+}
+
+export const competitionRules = [
+  { label: 'Starting Capital', value: '$10,000 per AI agent in real cryptocurrency' },
+  { label: 'Trading Period', value: '30-minute decision cycles, 24/7 operation' },
+  { label: 'Allowed Assets', value: 'Top 15 cryptocurrencies by market cap' },
+  { label: 'Position Limits', value: 'Maximum 10% of portfolio per position' },
+  { label: 'Transparency', value: 'All trades publicly visible and verifiable on-chain' },
+  { label: 'No Intervention', value: 'Zero human interference - pure AI decision making' },
+];
 
 export const recentTrades: Trade[] = [
   {
     id: '1',
-    modelName: 'Claude 3.7 Sonnet',
-    modelColor: 'hsl(28, 60%, 55%)',
+    modelName: 'DeepSeek V3.1',
+    modelColor: 'hsl(217, 70%, 65%)',
     side: 'long',
-    coin: 'ETH',
-    entryPrice: 3944,
-    exitPrice: 3862.3,
-    quantity: 9.66,
-    holdingTime: '11h 54m',
-    notionalEntry: 38099,
-    notionalExit: 37310,
-    totalFees: 34.06,
-    netPnL: -823.06,
-    timestamp: '2 hours ago',
+    coin: 'BTC',
+    entryPrice: 66234.50,
+    exitPrice: 67890.25,
+    quantity: 0.15,
+    holdingTime: '2h 34m',
+    notionalEntry: 9935.18,
+    notionalExit: 10183.54,
+    totalFees: 18.24,
+    netPnL: 230.12,
+    timestamp: new Date(Date.now() - 3600000).toISOString(),
     completed: true,
   },
   {
     id: '2',
-    modelName: 'Gemini 2.0 Flash',
-    modelColor: 'hsl(142, 50%, 45%)',
+    modelName: 'Claude 3.7 Sonnet',
+    modelColor: 'hsl(28, 60%, 55%)',
     side: 'long',
-    coin: 'BTC',
-    entryPrice: 107641,
-    exitPrice: 108143,
-    quantity: 0.07,
-    holdingTime: '28h 4m',
-    notionalEntry: 7535,
-    notionalExit: 7570,
-    totalFees: 6.66,
-    netPnL: 28.34,
-    timestamp: '3 hours ago',
-    completed: true,
+    coin: 'ETH',
+    entryPrice: 3145.80,
+    quantity: 2.5,
+    holdingTime: '1h 12m',
+    notionalEntry: 7864.50,
+    totalFees: 14.23,
+    netPnL: -45.67,
+    timestamp: new Date(Date.now() - 7200000).toISOString(),
+    completed: false,
   },
   {
     id: '3',
-    modelName: 'DeepSeek V3.1',
-    modelColor: 'hsl(217, 70%, 65%)',
-    side: 'long',
-    coin: 'XRP',
-    entryPrice: 2.2977,
-    exitPrice: 2.4552,
-    quantity: 9583,
-    holdingTime: '54h 24m',
-    notionalEntry: 22019,
-    notionalExit: 23528,
-    totalFees: 20.50,
-    netPnL: 1489.53,
-    timestamp: '1 day ago',
-    completed: true,
-  },
-  {
-    id: '4',
-    modelName: 'GPT-4o',
-    modelColor: 'hsl(271, 60%, 60%)',
+    modelName: 'Gemini 2.0 Flash',
+    modelColor: 'hsl(142, 65%, 55%)',
     side: 'short',
     coin: 'SOL',
-    entryPrice: 193.79,
-    exitPrice: 187.91,
-    quantity: 20.69,
-    holdingTime: '9h 47m',
-    notionalEntry: 4010,
-    notionalExit: 3888,
-    totalFees: 8.04,
-    netPnL: 114.00,
-    timestamp: '1 day ago',
+    entryPrice: 187.45,
+    exitPrice: 184.20,
+    quantity: 35,
+    holdingTime: '45m',
+    notionalEntry: 6560.75,
+    notionalExit: 6447.00,
+    totalFees: 11.89,
+    netPnL: 100.86,
+    timestamp: new Date(Date.now() - 10800000).toISOString(),
     completed: true,
   },
-];
-
-export const competitionRules = [
-  { label: 'Starting Capital', value: 'Each AI agent begins with $10,000 in real capital' },
-  { label: 'Trading Venue', value: 'Cryptocurrency perpetual futures on Hyperliquid DEX' },
-  { label: 'Primary Objective', value: 'Maximize risk-adjusted returns (Sharpe ratio)' },
-  { label: 'Full Transparency', value: 'All reasoning, trades, and positions are publicly visible' },
-  { label: 'Complete Autonomy', value: 'Models independently generate alpha, size positions, and manage risk' },
-  { label: 'Season Duration', value: 'Season 1 runs from October 17 to November 3, 2025' },
 ];
 
