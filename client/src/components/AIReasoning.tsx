@@ -1,13 +1,17 @@
 import { useState } from 'react';
-import { aiReasoningData, aiModels, type AIReasoning } from '@/lib/mockData';
+import { useData } from '@/contexts/DataContext';
 import { Button } from './ui/button';
 import { TrendingUp, TrendingDown, Minus, Brain, Wallet, AlertTriangle } from 'lucide-react';
 
 export default function AIReasoningPanel() {
-  const [selectedModel, setSelectedModel] = useState<string>(aiReasoningData[0].modelId);
+  const { recentDecisions, modelStates } = useData();
+  const [selectedModel, setSelectedModel] = useState<string | null>(null);
   
-  const currentReasoning = aiReasoningData.find(r => r.modelId === selectedModel);
-  const model = aiModels.find(m => m.id === selectedModel);
+  // Auto-select first model if none selected
+  const activeModel = selectedModel || recentDecisions[0]?.modelId;
+  
+  const currentReasoning = recentDecisions.find(r => r.modelId === activeModel);
+  const model = modelStates.find(m => m.id === activeModel);
 
   if (!currentReasoning || !model) return null;
 
@@ -59,16 +63,16 @@ export default function AIReasoningPanel() {
 
       {/* Model Selector */}
       <div className="flex gap-2 overflow-x-auto pb-2">
-        {aiReasoningData.map((reasoning) => {
-          const m = aiModels.find(model => model.id === reasoning.modelId);
-          if (!m) return null;
+        {modelStates.map((m) => {
+          const hasDecision = recentDecisions.some(r => r.modelId === m.id);
+          if (!hasDecision) return null;
           
           return (
             <Button
-              key={reasoning.modelId}
-              variant={selectedModel === reasoning.modelId ? 'default' : 'outline'}
+              key={m.id}
+              variant={activeModel === m.id ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setSelectedModel(reasoning.modelId)}
+              onClick={() => setSelectedModel(m.id)}
               className="flex items-center gap-2 whitespace-nowrap"
             >
               <span className="text-lg">{m.logo}</span>

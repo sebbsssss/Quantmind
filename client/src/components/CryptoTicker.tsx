@@ -1,22 +1,7 @@
-import { useEffect, useState } from 'react';
-import { cryptoPrices, type CryptoPrice } from '@/lib/mockData';
+import { useData } from '@/contexts/DataContext';
 
 export default function CryptoTicker() {
-  const [prices, setPrices] = useState<CryptoPrice[]>(cryptoPrices);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPrices((prev) =>
-        prev.map((crypto) => ({
-          ...crypto,
-          price: crypto.price * (1 + (Math.random() - 0.5) * 0.001),
-          change24h: crypto.change24h + (Math.random() - 0.5) * 0.1,
-        }))
-      );
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const { prices } = useData();
 
   return (
     <div className="border-b border-border bg-accent/30">

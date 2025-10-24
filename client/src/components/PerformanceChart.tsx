@@ -1,25 +1,25 @@
 import { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Scatter, ScatterChart, ZAxis } from 'recharts';
-import { generatePerformanceData, generateTradeMarkers, aiModels, type PerformanceDataPoint, type TradeMarker } from '@/lib/mockData';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { generatePerformanceData, type PerformanceDataPoint } from '@/lib/mockData';
+import { useData } from '@/contexts/DataContext';
 import { Button } from './ui/button';
 
 export default function PerformanceChart() {
+  const { modelStates } = useData();
   const [data, setData] = useState<PerformanceDataPoint[]>([]);
-  const [tradeMarkers, setTradeMarkers] = useState<TradeMarker[]>([]);
   const [timeRange, setTimeRange] = useState<'ALL' | '72H'>('ALL');
 
   useEffect(() => {
     setData(generatePerformanceData());
-    setTradeMarkers(generateTradeMarkers());
   }, []);
 
   const filteredData = timeRange === '72H' ? data.slice(-24) : data;
-  const totalAccountValue = aiModels.reduce((sum, model) => sum + model.accountValue, 0);
+  const totalAccountValue = modelStates.reduce((sum, model) => sum + model.accountValue, 0);
 
   // Custom dot component for logo trails
   const CustomDot = (props: any) => {
     const { cx, cy, payload, dataKey } = props;
-    const model = aiModels.find(m => m.id === dataKey);
+    const model = modelStates.find(m => m.id === dataKey);
     
     // Only show logo on the last data point
     const isLastPoint = payload.timestamp === filteredData[filteredData.length - 1]?.timestamp;
@@ -42,52 +42,6 @@ export default function PerformanceChart() {
     );
   };
 
-  // Custom dot for trade markers
-  const TradeMarkerDot = (props: any) => {
-    const { cx, cy, payload } = props;
-    if (!payload) return null;
-
-    const isBuy = payload.type === 'buy';
-    
-    return (
-      <g>
-        <circle
-          cx={cx}
-          cy={cy}
-          r={6}
-          fill={isBuy ? 'hsl(142, 65%, 55%)' : 'hsl(340, 70%, 60%)'}
-          stroke="white"
-          strokeWidth={2}
-          opacity={0.9}
-        />
-        <circle
-          cx={cx}
-          cy={cy}
-          r={10}
-          fill="none"
-          stroke={isBuy ? 'hsl(142, 65%, 55%)' : 'hsl(340, 70%, 60%)'}
-          strokeWidth={1}
-          opacity={0.3}
-        />
-      </g>
-    );
-  };
-
-  // Prepare trade markers for scatter plot
-  const scatterData = tradeMarkers
-    .filter(marker => {
-      const markerTime = new Date(marker.timestamp).getTime();
-      const firstDataTime = new Date(filteredData[0]?.timestamp || 0).getTime();
-      const lastDataTime = new Date(filteredData[filteredData.length - 1]?.timestamp || 0).getTime();
-      return markerTime >= firstDataTime && markerTime <= lastDataTime;
-    })
-    .map(marker => ({
-      timestamp: marker.timestamp,
-      value: marker.price,
-      type: marker.type,
-      modelId: marker.modelId,
-      symbol: marker.symbol,
-    }));
 
   return (
     <div className="flex flex-col space-y-6">
@@ -148,7 +102,7 @@ export default function PerformanceChart() {
               }}
               formatter={(value: number) => [`$${value.toFixed(2)}`, '']}
             />
-            {aiModels.map((model) => (
+            {modelStates.map((model) => (
               <Line
                 key={model.id}
                 type="monotone"
@@ -162,78 +116,20 @@ export default function PerformanceChart() {
             ))}
           </LineChart>
         </ResponsiveContainer>
-        
-        {/* Overlay scatter plot for trade markers */}
-        <div className="absolute inset-0 pointer-events-none">
-          <ResponsiveContainer width="100%" height="100%">
-            <ScatterChart>
-              <XAxis
-                dataKey="timestamp"
-                type="category"
-                domain={[filteredData[0]?.timestamp, filteredData[filteredData.length - 1]?.timestamp]}
-                hide
-              />
-              <YAxis
-                dataKey="value"
-                type="number"
-                domain={['dataMin - 500', 'dataMax + 500']}
-                hide
-              />
-              <ZAxis range={[100, 100]} />
-              <Tooltip
-                cursor={false}
-                content={({ payload }) => {
-                  if (!payload || !payload[0]) return null;
-                  const data = payload[0].payload;
-                  const model = aiModels.find(m => m.id === data.modelId);
-                  return (
-                    <div className="bg-white border border-border rounded-lg p-3 shadow-lg">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-lg">{model?.logo}</span>
-                        <span className="font-semibold text-sm">{model?.name}</span>
-                      </div>
-                      <div className="text-xs text-muted-foreground mb-1">
-                        {new Date(data.timestamp).toLocaleString()}
-                      </div>
-                      <div className={`text-sm font-semibold ${data.type === 'buy' ? 'text-accent-green' : 'text-accent-red'}`}>
-                        {data.type.toUpperCase()} {data.symbol}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        ${data.value.toFixed(2)}
-                      </div>
-                    </div>
-                  );
-                }}
-              />
-              <Scatter
-                data={scatterData}
-                shape={<TradeMarkerDot />}
-              />
-            </ScatterChart>
-          </ResponsiveContainer>
-        </div>
       </div>
 
       {/* Legend */}
       <div className="flex items-center gap-6 text-sm">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-accent-green" />
-          <span className="text-muted-foreground">Buy Signal</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-accent-red" />
-          <span className="text-muted-foreground">Sell Signal</span>
-        </div>
-        <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-full border-2 border-accent-blue flex items-center justify-center text-xs">
-            {aiModels[0].logo}
+            {modelStates[0]?.logo || '🟣'}
           </div>
           <span className="text-muted-foreground">AI Model Position</span>
         </div>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        {aiModels.map((model) => (
+        {modelStates.map((model) => (
           <div
             key={model.id}
             className="border border-border rounded-lg p-5 hover:shadow-sm transition-shadow cursor-pointer bg-card"

@@ -77,129 +77,81 @@ export const cryptoPrices: CryptoPrice[] = [
 
 export const aiModels: AIModel[] = [
   {
-    id: 'deepseek',
-    name: 'DeepSeek V3.1',
-    color: 'hsl(217, 70%, 65%)',
-    logo: '🔷',
-    accountValue: 11295.66,
-    returnPercent: 12.96,
-    totalPnL: 1295.66,
-    fees: 104.53,
-    winRate: 16.7,
-    biggestWin: 1490,
-    biggestLoss: -348.33,
-    sharpe: 0.004,
-    trades: 6,
-    rank: 1,
-  },
-  {
-    id: 'claude',
-    name: 'Claude 3.7 Sonnet',
-    color: 'hsl(28, 60%, 55%)',
-    logo: '🟠',
-    accountValue: 11148.67,
-    returnPercent: 11.49,
-    totalPnL: 1148.67,
-    fees: 170.54,
-    winRate: 12.5,
-    biggestWin: 1807,
-    biggestLoss: -1012.44,
-    sharpe: 0.003,
-    trades: 8,
-    rank: 2,
-  },
-  {
-    id: 'gemini',
-    name: 'Gemini 2.0 Flash',
-    color: 'hsl(142, 65%, 55%)',
-    logo: '🟢',
-    accountValue: 10376.88,
-    returnPercent: 3.77,
-    totalPnL: 376.88,
-    fees: 251.12,
-    winRate: 25.0,
-    biggestWin: 1245,
-    biggestLoss: -789.22,
-    sharpe: 0.001,
-    trades: 12,
-    rank: 3,
-  },
-  {
-    id: 'gpt4',
+    id: 'gpt4o',
     name: 'GPT-4o',
     color: 'hsl(280, 60%, 60%)',
     logo: '🟣',
-    accountValue: 9621.12,
-    returnPercent: -3.79,
-    totalPnL: -378.88,
-    fees: 289.44,
-    winRate: 18.4,
-    biggestWin: 980,
-    biggestLoss: -1245.67,
-    sharpe: -0.002,
-    trades: 14,
+    accountValue: 10000.00,
+    returnPercent: 0.00,
+    totalPnL: 0.00,
+    fees: 0.00,
+    winRate: 0.0,
+    biggestWin: 0,
+    biggestLoss: 0,
+    sharpe: 0.000,
+    trades: 0,
+    rank: 1,
+  },
+  {
+    id: 'claude-sonnet',
+    name: 'Claude 3.5 Sonnet',
+    color: 'hsl(28, 60%, 55%)',
+    logo: '🟠',
+    accountValue: 10000.00,
+    returnPercent: 0.00,
+    totalPnL: 0.00,
+    fees: 0.00,
+    winRate: 0.0,
+    biggestWin: 0,
+    biggestLoss: 0,
+    sharpe: 0.000,
+    trades: 0,
+    rank: 2,
+  },
+  {
+    id: 'gemini-pro',
+    name: 'Gemini Pro 1.5',
+    color: 'hsl(142, 65%, 55%)',
+    logo: '🟢',
+    accountValue: 10000.00,
+    returnPercent: 0.00,
+    totalPnL: 0.00,
+    fees: 0.00,
+    winRate: 0.0,
+    biggestWin: 0,
+    biggestLoss: 0,
+    sharpe: 0.000,
+    trades: 0,
+    rank: 3,
+  },
+  {
+    id: 'o1-mini',
+    name: 'o1-mini',
+    color: 'hsl(200, 70%, 60%)',
+    logo: '🔵',
+    accountValue: 10000.00,
+    returnPercent: 0.00,
+    totalPnL: 0.00,
+    fees: 0.00,
+    winRate: 0.0,
+    biggestWin: 0,
+    biggestLoss: 0,
+    sharpe: 0.000,
+    trades: 0,
     rank: 4,
-  },
-  {
-    id: 'llama',
-    name: 'Llama 3.3 70B',
-    color: 'hsl(340, 70%, 60%)',
-    logo: '🔴',
-    accountValue: 8896.23,
-    returnPercent: -11.04,
-    totalPnL: -1103.77,
-    fees: 456.89,
-    winRate: 15.6,
-    biggestWin: 756,
-    biggestLoss: -1567.88,
-    sharpe: -0.005,
-    trades: 32,
-    rank: 5,
-  },
-  {
-    id: 'mistral',
-    name: 'Mistral Large',
-    color: 'hsl(0, 0%, 50%)',
-    logo: '⚫',
-    accountValue: 8156.44,
-    returnPercent: -18.43,
-    totalPnL: -1843.56,
-    fees: 512.33,
-    winRate: 12.5,
-    biggestWin: 623,
-    biggestLoss: -1890.45,
-    sharpe: -0.008,
-    trades: 24,
-    rank: 6,
   },
 ];
 
-// Generate trade markers for chart
+// Generate trade markers for chart (empty initially, will be populated by Rails backend)
 export const generateTradeMarkers = (): TradeMarker[] => {
-  const markers: TradeMarker[] = [];
-  const now = Date.now();
-  const models = aiModels.map(m => m.id);
-  
-  // Generate random trade markers over the past 7 days
-  for (let i = 0; i < 30; i++) {
-    const timestamp = new Date(now - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString();
-    markers.push({
-      timestamp,
-      modelId: models[Math.floor(Math.random() * models.length)],
-      type: Math.random() > 0.5 ? 'buy' : 'sell',
-      price: 9000 + Math.random() * 3000,
-      symbol: ['BTC', 'ETH', 'SOL'][Math.floor(Math.random() * 3)],
-    });
-  }
-  
-  return markers.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+  return [];
 };
 
 // AI reasoning and decision explanations
 export const aiReasoningData: AIReasoning[] = [
   {
-    modelId: 'deepseek',
-    modelName: 'DeepSeek V3.1',
+    modelId: 'gpt4o',
+    modelName: 'GPT-4o',
     timestamp: new Date().toISOString(),
     decision: 'BUY',
     symbol: 'BTC',
@@ -216,8 +168,8 @@ export const aiReasoningData: AIReasoning[] = [
     riskAssessment: "Current portfolio volatility is within acceptable range. Maximum position size limits are being respected. No concentrated exposure to any single asset beyond risk parameters."
   },
   {
-    modelId: 'claude',
-    modelName: 'Claude 3.7 Sonnet',
+    modelId: 'claude-sonnet',
+    modelName: 'Claude 3.5 Sonnet',
     timestamp: new Date().toISOString(),
     decision: 'HOLD',
     symbol: 'ETH',
@@ -234,8 +186,8 @@ export const aiReasoningData: AIReasoning[] = [
     riskAssessment: "Moderate risk level. Current beta to BTC is 0.85, providing some downside protection. Stop losses are in place for all positions at -8% levels."
   },
   {
-    modelId: 'gemini',
-    modelName: 'Gemini 2.0 Flash',
+    modelId: 'gemini-pro',
+    modelName: 'Gemini Pro 1.5',
     timestamp: new Date().toISOString(),
     decision: 'SELL',
     symbol: 'SOL',
@@ -252,8 +204,8 @@ export const aiReasoningData: AIReasoning[] = [
     riskAssessment: "Low to moderate risk. Portfolio correlation to broader crypto market is 0.72, allowing for some independent movement. Volatility metrics are within normal ranges."
   },
   {
-    modelId: 'gpt4',
-    modelName: 'GPT-4o',
+    modelId: 'o1-mini',
+    modelName: 'o1-mini',
     timestamp: new Date().toISOString(),
     decision: 'BUY',
     symbol: 'ETH',
@@ -305,8 +257,8 @@ export const competitionRules = [
 export const recentTrades: Trade[] = [
   {
     id: '1',
-    modelName: 'DeepSeek V3.1',
-    modelColor: 'hsl(217, 70%, 65%)',
+    modelName: 'GPT-4o',
+    modelColor: 'hsl(280, 60%, 60%)',
     side: 'long',
     coin: 'BTC',
     entryPrice: 66234.50,
@@ -322,7 +274,7 @@ export const recentTrades: Trade[] = [
   },
   {
     id: '2',
-    modelName: 'Claude 3.7 Sonnet',
+    modelName: 'Claude 3.5 Sonnet',
     modelColor: 'hsl(28, 60%, 55%)',
     side: 'long',
     coin: 'ETH',
@@ -337,7 +289,7 @@ export const recentTrades: Trade[] = [
   },
   {
     id: '3',
-    modelName: 'Gemini 2.0 Flash',
+    modelName: 'Gemini Pro 1.5',
     modelColor: 'hsl(142, 65%, 55%)',
     side: 'short',
     coin: 'SOL',
