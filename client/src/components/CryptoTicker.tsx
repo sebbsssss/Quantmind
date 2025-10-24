@@ -21,7 +21,7 @@ export default function CryptoTicker() {
   return (
     <div className="border-b border-border bg-accent/30">
       <div className="container mx-auto px-6 py-3">
-        <div className="flex items-center gap-6 overflow-x-auto text-base">
+        <div className="flex items-center gap-6 overflow-x-auto text-base scrollbar-hide">
           {prices.map((crypto) => (
             <div key={crypto.symbol} className="flex items-center gap-3 flex-shrink-0">
               <span className="font-medium text-foreground">{crypto.symbol}</span>
