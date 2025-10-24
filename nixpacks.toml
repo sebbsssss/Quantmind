@@ -8,7 +8,7 @@ cmds = [
 
 [phases.build]
 cmds = [
-  "pnpm build"
+  "pnpm run build"
 ]
 
 [start]
