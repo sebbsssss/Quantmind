@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { generatePerformanceData, type PerformanceDataPoint } from '@/lib/mockData';
 import { useData } from '@/contexts/DataContext';
 import { Button } from './ui/button';
@@ -8,6 +8,7 @@ export default function PerformanceChart() {
   const { modelStates } = useData();
   const [data, setData] = useState<PerformanceDataPoint[]>([]);
   const [timeRange, setTimeRange] = useState<'ALL' | '72H'>('ALL');
+  const [valueMode, setValueMode] = useState<'$' | '%'>('$');
 
   useEffect(() => {
     setData(generatePerformanceData());
@@ -15,8 +16,10 @@ export default function PerformanceChart() {
 
   const filteredData = timeRange === '72H' ? data.slice(-24) : data;
   const totalAccountValue = modelStates.reduce((sum, model) => sum + model.accountValue, 0);
+  const totalPnL = totalAccountValue - (modelStates.length * 10000);
+  const totalPnLPercent = (totalPnL / (modelStates.length * 10000)) * 100;
 
-  // Custom dot component for logo trails
+  // Custom dot component for logo trails at the end of lines
   const CustomDot = (props: any) => {
     const { cx, cy, payload, dataKey } = props;
     const model = modelStates.find(m => m.id === dataKey);
@@ -28,125 +31,189 @@ export default function PerformanceChart() {
 
     return (
       <g>
-        <circle cx={cx} cy={cy} r={16} fill="white" stroke={model.color} strokeWidth={2} />
+        {/* Outer circle with border */}
+        <circle 
+          cx={cx} 
+          cy={cy} 
+          r={20} 
+          fill="hsl(var(--background))" 
+          stroke={model.color} 
+          strokeWidth={2.5}
+        />
+        {/* Logo */}
         <text
           x={cx}
           y={cy}
           textAnchor="middle"
           dominantBaseline="central"
-          fontSize="16"
+          fontSize="20"
         >
           {model.logo}
+        </text>
+        {/* Value tooltip */}
+        <rect
+          x={cx + 25}
+          y={cy - 12}
+          width={80}
+          height={24}
+          rx={4}
+          fill={model.color}
+        />
+        <text
+          x={cx + 65}
+          y={cy}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontSize="13"
+          fontWeight="600"
+          fill="white"
+        >
+          ${(model.accountValue / 1000).toFixed(1)}k
         </text>
       </g>
     );
   };
 
-
   return (
-    <div className="flex flex-col space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4">
+      {/* Total Account Value - nof1.ai style */}
+      <div className="flex items-center justify-between border-b pb-4">
         <div>
-          <h2 className="text-3xl font-semibold mb-2">Portfolio Performance</h2>
-          <p className="text-base text-muted-foreground">Real-time tracking of AI trading agents</p>
+          <div className="text-sm text-muted-foreground uppercase tracking-wide mb-1">Total Account Value</div>
+          <div className="flex items-baseline gap-3">
+            <div className="text-4xl font-bold">
+              ${totalAccountValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </div>
+            <div className={`text-xl font-semibold ${totalPnL >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+              {totalPnL >= 0 ? '+' : ''}${totalPnL.toFixed(2)} ({totalPnL >= 0 ? '+' : ''}{totalPnLPercent.toFixed(2)}%)
+            </div>
+          </div>
         </div>
+        
+        {/* Controls - nof1.ai style */}
         <div className="flex gap-2">
+          {/* Time Range */}
           <Button
             variant={timeRange === 'ALL' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setTimeRange('ALL')}
+            className="text-sm font-bold px-4"
           >
-            All Time
+            ALL
           </Button>
           <Button
             variant={timeRange === '72H' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setTimeRange('72H')}
+            className="text-sm font-bold px-4"
           >
-            72 Hours
+            72H
+          </Button>
+          
+          {/* Value Mode */}
+          <div className="w-px bg-border mx-1" />
+          <Button
+            variant={valueMode === '$' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setValueMode('$')}
+            className="text-sm font-bold px-4"
+          >
+            $
+          </Button>
+          <Button
+            variant={valueMode === '%' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setValueMode('%')}
+            className="text-sm font-bold px-4"
+          >
+            %
           </Button>
         </div>
       </div>
 
-      <div className="bg-accent-blue-light/50 rounded-lg p-6 border border-accent-blue/20">
-        <div className="text-base text-muted-foreground mb-2">Total Account Value</div>
-        <div className="text-4xl font-bold text-foreground">
-          ${totalAccountValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-        </div>
-      </div>
-
-      <div className="h-[400px] relative">
+      {/* Chart */}
+      <div className="h-[500px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={filteredData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(0, 0%, 90%)" vertical={false} />
+          <LineChart data={filteredData} margin={{ top: 20, right: 100, left: 10, bottom: 20 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
             <XAxis
               dataKey="timestamp"
-              stroke="hsl(0, 0%, 70%)"
-              tick={{ fill: 'hsl(0, 0%, 45%)', fontSize: 11 }}
               tickFormatter={(value) => {
                 const date = new Date(value);
                 return `${date.getMonth() + 1}/${date.getDate()}`;
               }}
+              stroke="hsl(var(--muted-foreground))"
+              style={{ fontSize: '13px' }}
             />
             <YAxis
-              stroke="hsl(0, 0%, 70%)"
-              tick={{ fill: 'hsl(0, 0%, 45%)', fontSize: 11 }}
               tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+              stroke="hsl(var(--muted-foreground))"
+              style={{ fontSize: '13px' }}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: 'white',
-                border: '1px solid hsl(0, 0%, 90%)',
+                backgroundColor: 'hsl(var(--card))',
+                border: '1px solid hsl(var(--border))',
                 borderRadius: '8px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                fontSize: '14px',
               }}
-              formatter={(value: number) => [`$${value.toFixed(2)}`, '']}
+              formatter={(value: any) => [`$${value.toFixed(2)}`, '']}
+              labelFormatter={(label) => new Date(label).toLocaleString()}
             />
+            
+            {/* Starting capital reference line */}
+            <ReferenceLine y={10000} stroke="hsl(var(--muted-foreground))" strokeDasharray="5 5" opacity={0.5} />
+
+            {/* Lines for each AI model */}
             {modelStates.map((model) => (
               <Line
                 key={model.id}
                 type="monotone"
                 dataKey={model.id}
                 stroke={model.color}
-                strokeWidth={2}
-                dot={<CustomDot />}
+                strokeWidth={2.5}
+                dot={false}
                 activeDot={{ r: 6 }}
-                name={model.name}
+                isAnimationActive={false}
+              />
+            ))}
+
+            {/* Logo trails at the end of each line */}
+            {modelStates.map((model) => (
+              <Line
+                key={`${model.id}-dot`}
+                type="monotone"
+                dataKey={model.id}
+                stroke="transparent"
+                strokeWidth={0}
+                dot={<CustomDot />}
+                isAnimationActive={false}
               />
             ))}
           </LineChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Legend */}
-      <div className="flex items-center gap-6 text-sm">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full border-2 border-accent-blue flex items-center justify-center text-xs">
-            {modelStates[0]?.logo || '🟣'}
-          </div>
-          <span className="text-muted-foreground">AI Model Position</span>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        {modelStates.map((model) => (
-          <div
-            key={model.id}
-            className="border border-border rounded-lg p-5 hover:shadow-sm transition-shadow cursor-pointer bg-card"
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <div className="text-xl">{model.logo}</div>
-              <div className="text-sm font-medium text-muted-foreground">{model.name}</div>
+      {/* Model Cards Below Chart - nof1.ai style (simplified) */}
+      <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+        {modelStates.map((model) => {
+          return (
+            <div
+              key={model.id}
+              className="flex-shrink-0 p-5 rounded-lg border bg-card min-w-[200px] hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-2xl">
+                  {model.logo}
+                </div>
+                <div className="text-base font-semibold">{model.name}</div>
+              </div>
+              <div className="text-2xl font-bold">
+                ${(model.accountValue / 1000).toFixed(1)}k
+              </div>
             </div>
-            <div className="text-xl font-semibold text-foreground">
-              ${(model.accountValue / 1000).toFixed(1)}k
-            </div>
-            <div className={`text-sm ${model.returnPercent >= 0 ? 'text-accent-green' : 'text-accent-red'}`}>
-              {model.returnPercent >= 0 ? '+' : ''}
-              {model.returnPercent.toFixed(2)}%
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

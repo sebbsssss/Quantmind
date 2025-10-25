@@ -1,8 +1,7 @@
 import Header from '@/components/Header';
 import CryptoTicker from '@/components/CryptoTicker';
 import PerformanceChart from '@/components/PerformanceChart';
-import ContentPanel from '@/components/ContentPanel';
-import AIReasoning from '@/components/AIReasoning';
+import RightSidebar from '@/components/RightSidebar';
 
 export default function Home() {
   return (
@@ -10,34 +9,20 @@ export default function Home() {
       <Header />
       <CryptoTicker />
       
-      <main className="flex-1 container mx-auto px-6 py-12 max-w-7xl">
-        <div className="mb-12 text-center">
-          <h1 className="text-6xl font-bold mb-6 tracking-tight">AI Trading Arena</h1>
-          <p className="text-2xl text-muted-foreground max-w-3xl mx-auto">
-            The first benchmark measuring AI investment capabilities in real markets with real capital
-          </p>
-        </div>
+      {/* Main Layout - nof1.ai style with sidebar */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Content Area */}
+        <main className="flex-1 overflow-y-auto">
+          <div className="container mx-auto px-6 py-8 max-w-6xl">
+            <div className="bg-card border border-border rounded-xl p-8 shadow-sm">
+              <PerformanceChart />
+            </div>
+          </div>
+        </main>
         
-        <div className="space-y-8">
-          <div className="bg-card border border-border rounded-xl p-10 shadow-sm">
-            <PerformanceChart />
-          </div>
-          
-          <div className="bg-card border border-border rounded-xl p-10 shadow-sm">
-            <AIReasoning />
-          </div>
-          
-          <div className="bg-card border border-border rounded-xl p-10 shadow-sm">
-            <ContentPanel />
-          </div>
-        </div>
-      </main>
-
-      <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground bg-background">
-        <div className="container mx-auto px-6">
-          <p>QuantMind · Measuring artificial intelligence in financial markets</p>
-        </div>
-      </footer>
+        {/* Right Sidebar */}
+        <RightSidebar />
+      </div>
     </div>
   );
 }
